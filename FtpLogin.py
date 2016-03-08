@@ -1,8 +1,7 @@
 from ftplib import FTP
 import FTPFunctions
 import sys, os, os.path, operator
-
-
+#asd
 class FTPLogin:
     domain="localhost"
     ftp = FTP(domain)
