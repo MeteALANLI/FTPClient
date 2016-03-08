@@ -1,8 +1,7 @@
 from ftplib import FTP
 from FTPPackage import FTPFunctions
 import sys, os, os.path, operator
-
-
+#asd
 class FTPLogin:
     ftp_fn = FTPFunctions.FTPFunctions
     print("Welcome SDUFTP!")
