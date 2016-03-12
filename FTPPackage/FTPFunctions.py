@@ -5,7 +5,7 @@ class FTPFunctions:
     def upload(self):
         return
     def download(self):
-        return
+        return "a"
     def getHelp(str = ""):
         response ="dir 'O an içinde bulunduğunuz klasörleri listeler'"
         return response
