@@ -11,5 +11,6 @@ class FTPFunctions:
         response =" listele\t'Klasörleri listeler'\n" \
                   " gulegule\t'Login Ekranina çıkış verir'\n" \
                   " cikis\t'Programdan çıkmayı sağlar'\n" \
+                  " k_gir\t'Belirtilen yola gir\n'" \
                   " "
         return response

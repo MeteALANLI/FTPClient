@@ -37,7 +37,8 @@ class FTPLogin:
         if command == "yardim":
             print(ftp_fn.getHelp())
             continue
-        elif command.__contains__("cd"):  # Dizin değiştirme
+        elif command.__contains__("cd "):  # Dizin değiştirme
+
             continue
         elif command == "pwd":  # Bulunan dizin ismi
             continue
