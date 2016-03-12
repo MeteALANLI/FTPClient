@@ -6,24 +6,29 @@ import FTPFunctions
 def myLogin():  # Giriş yaptıran method yanls giris olursa bir daha girmek icin
     while True:
         host = str(input("Server Adresini Giriniz :"))
-        user_n = str(input("Kullanıcı Adını giriniz :"))
-        user_p = str(input("Şifrenizi giriniz :"))
 
         if "http://" in host:  # Host Ip adresini almak için taraycidan alinirsa diye http:// silindi
             host = host.replace("http://", "")
         try:
             ftp = FTP(host)# Baglanti sağlandı ve bir değişkene atıldı.
+
         except:# Baglantı saglanmazsa olacaklar.
             print("Server Adresi Çözümlenemedi")
             continue
-        try:
-            ftp.login(user=user_n, passwd=user_p)  # Giriş burda yapıldı
-        except:
-            print("Kullanıcı adı veya şifre hatalı")
-            continue
-        else:
-            print(ftp.getwelcome())
-            break
+
+        while True:
+            user_n = str(input("Kullanıcı Adını giriniz :"))
+            user_p = str(input("Şifrenizi Giriniz :"))
+            try:
+                ftp.login(user=user_n, passwd=user_p)  # Giriş burda yapıldı
+                break
+            except:
+                print("Kullanıcı adı veya şifre hatalı")
+                continue
+
+        print(ftp.getwelcome())
+        break
+
     return ftp  # Eğer giriş düzgün ise buraya düsüp geriye döndürcek girdiği FTP'yi
 
 
