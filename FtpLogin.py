@@ -1,56 +1,55 @@
-from ftplib import FTP
-from FTPPackage import FTPFunctions
 import sys, os, os.path, operator
+from ftplib import FTP
+import FTPFunctions
 
 
-def meLogin():  # giriş yaptıran method yanls giris olursa bir daha girmek icin
-    while 1:
-        host = str(input("Write FTP server adress :"))
-        user_n = str(input("Write your username :"))
-        user_p = str(input("write your passwd :"))
-        if "http://" in host:#Host Ip adresini almak için taraycidan alinirsa diye http:// silindi
+def myLogin():  # Giriş yaptıran method yanls giris olursa bir daha girmek icin
+    while True:
+        host = str(input("Server Adresini Giriniz :"))
+        user_n = str(input("Kullanıcı Adını giriniz :"))
+        user_p = str(input("Şifrenizi giriniz :"))
+
+        if "http://" in host:  # Host Ip adresini almak için taraycidan alinirsa diye http:// silindi
             host = host.replace("http://", "")
         try:
-            ftp = FTP(host)
-        except:
-            print("Host name not resolved")
-            meLogin()
+            ftp = FTP(host)# Baglanti sağlandı ve bir değişkene atıldı.
+        except:# Baglantı saglanmazsa olacaklar.
+            print("Server Adresi Çözümlenemedi")
+            continue
         try:
-            ftp.login(user=user_n, passwd=user_p)#giriş burda yapıldı
+            ftp.login(user=user_n, passwd=user_p)  # Giriş burda yapıldı
         except:
-            print("Username or Password is wrong")
-            meLogin()
+            print("Kullanıcı adı veya şifre hatalı")
+            continue
         else:
             print(ftp.getwelcome())
             break
-    return ftp#Eğer giriş düzgün ise buraya düsüp geriye döndürcek girdiği FTP'yi
+    return ftp  # Eğer giriş düzgün ise buraya düsüp geriye döndürcek girdiği FTP'yi
 
 
 class FTPLogin:
     ftp_fn = FTPFunctions.FTPFunctions
-    print("Welcome SDUFTP!")
-    ftp = meLogin()
+    print("SDUFTP'ye hoşgeldiniz!")
+    ftp = myLogin()#İnternet dağında bir tünel açıldı
     path = ftp.pwd()
-    value = 1
-    while value == 1:
-        command = str(input("Type a command:"))
+    while True:
+        command = str(input("Bir komut giriniz:"))
         if command == "yardim":
             print(ftp_fn.getHelp())
             continue
-        elif command.__contains__("cd"):  # dizin değiştirme
+        elif command.__contains__("cd"):  # Dizin değiştirme
             continue
-        elif command == "pwd":  # bulunan dizin ismi
+        elif command == "pwd":  # Bulunan dizin ismi
             continue
-        elif command.__contains__('get'):  # dosya alma komutu get alınacakdosya alınansodya adı
-            print("Get")
+        elif command.__contains__('get'):  # Dosya alma komutu get alınacakdosya alınansodya adı
             continue
-        elif command == "send":  # dosya gönderme
+        elif command == "send":  # Dosya gönderme
             continue
-        elif command == "bye":  # ftpden çıkma login ekranına geri götürme
+        elif command == "gulegule":  # Ftpden çıkma login ekranına geri götürme
             ftp.close()
-            meLogin()
+            myLogin()
             continue
-        elif command == "exit":  # programdan çıkma
+        elif command == "cikis":  # Programdan çıkma
             sys.exit()
         else:
             print("Invaild command!!Please check you command or type 'yardim' for all commands")
