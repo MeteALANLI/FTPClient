@@ -10,7 +10,10 @@ def myLogin():  # Giriş yaptıran method yanls giris olursa bir daha girmek ici
         if "http://" in host:  # Host Ip adresini almak için taraycidan alinirsa diye http:// silindi
             host = host.replace("http://", "")
         try:
-            ftp = FTP(host)# Baglanti sağlandı ve bir değişkene atıldı.
+            if not host:
+                continue
+            else:
+                ftp = FTP(host)# Baglanti sağlandı ve bir değişkene atıldı.
 
         except:# Baglantı saglanmazsa olacaklar.
             print("Server Adresi Çözümlenemedi")
