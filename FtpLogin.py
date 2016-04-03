@@ -1,44 +1,10 @@
 import sys, os, os.path, operator
 from ftplib import FTP
-import FTPFunctions
-
-
-def myLogin():  # Giriş yaptıran method yanls giris olursa bir daha girmek icin
-    while True:
-        host = str(input("Server Adresini Giriniz :"))
-
-        if "http://" in host:  # Host Ip adresini almak için taraycidan alinirsa diye http:// silindi
-            host = host.replace("http://", "")
-        try:
-            if not host:
-                continue
-            else:
-                ftp = FTP(host)# Baglanti sağlandı ve bir değişkene atıldı.
-
-        except:# Baglantı saglanmazsa olacaklar.
-            print("Server Adresi Çözümlenemedi")
-            continue
-
-        while True:
-            user_n = str(input("Kullanıcı Adını giriniz :"))
-            user_p = str(input("Şifrenizi Giriniz :"))
-            try:
-                ftp.login(user=user_n, passwd=user_p)  # Giriş burda yapıldı
-                break
-            except:
-                print("Kullanıcı adı veya şifre hatalı")
-                continue
-
-        print(ftp.getwelcome())
-        break
-
-    return ftp  # Eğer giriş düzgün ise buraya düsüp geriye döndürcek girdiği FTP'yi
-
-
+import Functions
 class FTPLogin:
-    ftp_fn = FTPFunctions.FTPFunctions
+    ftp_fn = Functions.Functions
     print("SDUFTP'ye hoşgeldiniz!")
-    ftp = myLogin()#İnternet dağında bir tünel açıldı
+    ftp = ftp_fn.myLogin(ftp_fn)#İnternet dağında bir tünel açıldı
     path = ftp.pwd()
     while True:
         command = str(input("Bir komut giriniz:"))
@@ -56,7 +22,7 @@ class FTPLogin:
             continue
         elif command == "gulegule":  # Ftpden çıkma login ekranına geri götürme
             ftp.close()
-            myLogin()
+            ftp_fn.myLogin(ftp_fn)
             continue
         elif command == "cikis":  # Programdan çıkma
             sys.exit()
