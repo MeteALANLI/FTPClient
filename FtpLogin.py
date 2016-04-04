@@ -33,91 +33,111 @@ class FTPLogin:
             continue
 
         elif command.__contains__("cd "):  # Dizin değiştirme
-            resp=ftp.pwd()
+
             try:
-                if resp[:1] == 4 or resp[:1] == 5:
-                    print("HATA!:Dizin Değiştirelemedi")
+                resp=ftp.pwd()
             except:
-                print("Dizin Başarı ile Değiştirildi.")
+                print("Dizin Değiştirilemedi.")
+
+            print("Dizin Başarı ile Değiştirildi.")
             continue
 
 
         elif command == "pwd":  # Bulunan dizin ismini verir
-            resp=ftp.pwd()
+
             try:
-                if resp[:1] == 4 or resp[:1] == 5:
-                    print("HATA!:Dizin Yolu Bulunamadı.")
+                resp=ftp.pwd()
+
             except:
-                print("Dizin Yolu Bulundu.")
+                print("HATA!:Dizin Yolu Bulunamadı.")
 
-
+            print("Dizin Yolu Bulundu.")
             continue
+
+
         elif command == "dir":
-            resp=ftp.dir()
+
             try:
-                if resp[:1] == 4 or resp[:1] == 5:
-                    print("HATA!:Klasörler Listelenemedi.")
+                resp=ftp.dir()
+
             except:
-                print("Klasörler Başarı ile Listelendi.")
+                print("HATA!:Klasörler Listelenemedi.")
+
+            print("Klasörler Başarı ile Listelendi.")
             continue
 
 
         elif command.__contains__("mkd"):
             mName=command.replace("mkd ","")
-            resp=ftp.mkd(mName)
-            try:
-                if resp[:1] == 4 or resp[:1] == 5:
-                    print("HATA!:Klasör Oluşturulamadı.")
-            except:
-                print("Klasör Başarı ile Oluşturuldu.")
 
+            try:
+                resp=ftp.mkd(mName)
+
+            except:
+                print("HATA!:Klasör Oluşturulamadı.")
+            print("Klasör Başarı ile Oluşturuldu.")
             continue
 
 
         elif command.__contains__("delete"):
             dosyaSil=command.replace("delete ","")
-            resp=ftp.delete(dosyaSil)
-            try:
-                if resp[:1] == 4 or resp[:1] == 5:
-                    print("HATA!:Klasör Silinemedi.")
-            except:
-                print("Klasör Başarı ile Silindi.")
 
+            try:
+                resp=ftp.delete(dosyaSil)
+
+            except:
+                print("HATA!:Klasör Silinemedi.")
+
+            print("Klasör Başarı ile Silindi.")
             continue
 
 
         elif command.__contains__("get"):  # Dosya alma komututur.... alınacakdosya alınansodya adı
-            resp=ftp.get()
+
             try:
-                if resp[:1] == 4 or resp[:1] == 5:
-                    print("HATA!:Dosya Alınamadı.")
+                resp=ftp.get()
+
             except:
-                print("Dosya Başarı ile Alındı.")
+                print("HATA!:Dosya Alınamadı.")
+
+            print("Dosya Başarı ile Alındı.")
             continue
 
 
         elif command == "send":  # Dosya gönderme
+            try:
+                resp=ftp.send()
+
+            except:
+                print("HATA!:Dosya Gönderilemedi.")
+
+            print("Dosya Başarı ile Gönderildi.")
             continue
 
 
         elif command == "close":  # Ftpden çıkma login ekranına geri götürme
-            resp=ftp.close()
+
             try:
-                if resp[:1] == 4 or resp[:1] == 5:
-                    print("HATA!:Bağlantıdan Çıkış Yapılamadı.")
+                resp=ftp.close()
+                ftp_fn.myLogin(ftp_fn)
+
             except:
-                print("Bağlantıdan Başarı İle Çıkıldı.")
-            ftp_fn.myLogin(ftp_fn)
+                print("HATA!:Bağlantıdan Çıkış Yapılamadı.")
+
+            print("Bağlantıdan Başarı İle Çıkıldı.")
             continue
 
 
         elif command == "exit":  # Programdan çıkma
-            resp=sys.exit()
+
             try:
-                if resp[:1] == 4 or resp[:1] == 5:
-                    print("HATA!:Programdan Çıkılamadı.")
+                resp=sys.exit()
+
             except:
-                print("Programdan Başarı İle Çıkıldı.")
+                print("HATA!:Programdan Çıkılamadı.")
+
+            print("Programdan Başarı İle Çıkıldı.")
+            continue
         else:
             print("Yanlış komut girdiniz. Lütfen 'yardim' komutuna giriniz:")
 
