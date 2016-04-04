@@ -92,9 +92,54 @@ class FTP:
             line = line[:-1]
         return line
 
+    def close(self):
+        try:
+            file = self.file
+            self.file = None
+            if file is not None:
+                file.close()
+        finally:
+            sock = self.sock
+            self.sock = None
+            if sock is not None:
+                sock.close()
+
+    def quit(self):
+        resp = self.sendcommand('QUIT')
+        self.close()
+        return resp
+
     def mkd(self, name):
         resp = self.sendcommand('MKD ' + name)
         return resp
+
+    def delete(self, filename):
+        resp = self.sendcommand('DELE ' + filename)
+        if resp[:3] in {'250', '200'}:
+            return resp
+        else:
+            raise error_perm(resp)
+
+    def cwd(self, name):
+        if name == '..':
+            try:
+                return self.sendcommand('CDUP')
+            except error_perm as msg:
+                if msg.args[0][:3] != '500':
+                    raise
+        elif name == '':
+            name = '.'
+        cmd = 'CWD ' + name
+        return self.sendcommand(cmd)
+
+    def rmd(self, name):
+        return self.sendcommand('RMD ' + name)
+
+    def size(self, filename):
+        resp = self.sendcommand('SIZE ' + filename)
+        if resp[:3] == '213':
+            s = resp[3:].strip()
+            return int(s)
 
     def pwd(self):
         resp = self.sendcommand('PWD')
