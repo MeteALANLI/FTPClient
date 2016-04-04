@@ -36,10 +36,10 @@ class FTPLogin:
 
             try:
                 resp=ftp.pwd()
+                print("Dizin Başarı ile Değiştirildi.")
             except:
                 print("Dizin Değiştirilemedi.")
 
-            print("Dizin Başarı ile Değiştirildi.")
             continue
 
 
@@ -47,11 +47,11 @@ class FTPLogin:
 
             try:
                 resp=ftp.pwd()
-
+                print("Dizin Yolu Bulundu.")
             except:
                 print("HATA!:Dizin Yolu Bulunamadı.")
 
-            print("Dizin Yolu Bulundu.")
+
             continue
 
 
@@ -59,11 +59,11 @@ class FTPLogin:
 
             try:
                 resp=ftp.dir()
-
+                print("Klasörler Başarı ile Listelendi.")
             except:
                 print("HATA!:Klasörler Listelenemedi.")
 
-            print("Klasörler Başarı ile Listelendi.")
+
             continue
 
 
@@ -72,23 +72,23 @@ class FTPLogin:
 
             try:
                 resp=ftp.mkd(mName)
-
+                print("Klasör Başarı ile Oluşturuldu.")
             except:
                 print("HATA!:Klasör Oluşturulamadı.")
-            print("Klasör Başarı ile Oluşturuldu.")
+
             continue
 
 
         elif command.__contains__("delete"):
             dosyaSil=command.replace("delete ","")
-
+            resp =""
             try:
                 resp=ftp.delete(dosyaSil)
-
+                print("Klasör Başarı ile Silindi.")
             except:
-                print("HATA!:Klasör Silinemedi.")
+                print("HATA!:Klasör Silinemedi.",resp)
 
-            print("Klasör Başarı ile Silindi.")
+
             continue
 
 
@@ -96,48 +96,40 @@ class FTPLogin:
 
             try:
                 resp=ftp.get()
-
+                print("Dosya Başarı ile Alındı.")
             except:
                 print("HATA!:Dosya Alınamadı.")
-
-            print("Dosya Başarı ile Alındı.")
             continue
-
 
         elif command == "send":  # Dosya gönderme
             try:
                 resp=ftp.send()
-
+                print("Dosya Başarı ile Gönderildi.")
             except:
                 print("HATA!:Dosya Gönderilemedi.")
 
-            print("Dosya Başarı ile Gönderildi.")
-            continue
 
+            continue
 
         elif command == "close":  # Ftpden çıkma login ekranına geri götürme
 
             try:
                 resp=ftp.close()
                 ftp_fn.myLogin(ftp_fn)
-
+                print("Bağlantıdan Başarı İle Çıkıldı.")
             except:
                 print("HATA!:Bağlantıdan Çıkış Yapılamadı.")
 
-            print("Bağlantıdan Başarı İle Çıkıldı.")
-            continue
 
+            continue
 
         elif command == "exit":  # Programdan çıkma
 
             try:
-                resp=sys.exit()
-
+                sys.exit()
+                print("Programdan Başarı İle Çıkıldı.")
             except:
                 print("HATA!:Programdan Çıkılamadı.")
 
-            print("Programdan Başarı İle Çıkıldı.")
             continue
-        else:
-            print("Yanlış komut girdiniz. Lütfen 'yardim' komutuna giriniz:")
 
