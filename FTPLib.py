@@ -4,6 +4,7 @@ from socket import _GLOBAL_DEFAULT_TIMEOUT
 
 class Error(Exception): pass # pass hata oluşunca program kapanmaması için.
 class error_temp(Error): pass
+class error_reply(Error): pass
 class error_perm(Error): pass
 
 TAKI = '\r\n'#Her FTP Komutundan sonra olması gereken bir takı
@@ -39,6 +40,7 @@ class FTP:
             self.timeout = timeout
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # soketin oluşturulduğu satır
+        self.af = self.sock.family
         self.sock.connect((self.host, self.port))
         self.file = self.sock.makefile("r", encoding=self.encoding) # sokette yapılan işlemlerin yapılacağı dosya
         self.welcome = self.getanswer()
@@ -148,3 +150,86 @@ class FTP:
     def dir(self):
         resp = self.sendcommand('LIST')
         return resp
+
+    def retrbinary(self, cmd, callback, blocksize=8192, rest=None):
+
+        self.sendcommand('TYPE I')
+
+        with self.transfercmd(cmd, rest) as conn:
+            while 1:
+                data = conn.recv(blocksize)
+                if not data:
+                    break
+                callback(data)
+            # shutdown ssl layer
+            if _SSLSocket is not None and isinstance(conn, _SSLSocket):
+                conn.unwrap()
+        return self.getanswer()
+
+    def makeport(self):
+        '''Create a new socket and send a PORT command for it.'''
+        err = None
+        sock = None
+        for res in socket.getaddrinfo(None, 0, self.af, socket.SOCK_STREAM, 0, socket.AI_PASSIVE):
+            af, socktype, proto, canonname, sa = res
+            try:
+                sock = socket.socket(af, socktype, proto)
+                sock.bind(sa)
+            except OSError as _:
+                err = _
+                if sock:
+                    sock.close()
+                sock = None
+                continue
+            break
+        if sock is None:
+            if err is not None:
+                raise err
+            else:
+                raise OSError("getaddrinfo returns an empty list")
+        sock.listen(1)
+        port = sock.getsockname()[1]  # Get proper port
+        host = self.sock.getsockname()[0]  # Get proper host
+        if self.af == socket.AF_INET:
+            resp = self.sendport(host, port)
+        else:
+            resp = self.sendport(host, port)
+        if self.timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+            sock.settimeout(self.timeout)
+        return sock
+
+    def sendport(self, host, port):
+
+        hbytes = host.split('.')
+        pbytes = [repr(port // 256), repr(port % 256)]
+        bytes = hbytes + pbytes
+        cmd = 'PORT ' + ','.join(bytes)
+        return self.sendcommand(cmd)
+
+    def ntransfercmd(self, cmd, rest=None):
+        size = None
+        with self.makeport() as sock:
+            if rest is not None:
+                self.sendcommand("REST %s" % rest)
+            resp = self.sendcommand(cmd)
+            # See above.
+            if resp[0] == '2':
+                resp = self.getanswer()
+            if resp[0] != '1':
+                raise error_reply(resp)
+
+            conn, sockaddr = sock.accept()
+            if self.timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+                conn.settimeout(self.timeout)
+        return conn, size
+
+    def transfercmd(self, cmd, rest=None):
+        return self.ntransfercmd(cmd, rest)[0]
+
+
+try:
+    import ssl
+except ImportError:
+    _SSLSocket = None
+else:
+    _SSLSocket = ssl.SSLSocket
