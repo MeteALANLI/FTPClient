@@ -13,30 +13,29 @@ class FTPLogin:
             print(Functions.getHelp())
             continue
 
-
         elif command == "sda":  # Bulunan dizin ismini verir
 
             try:
-                print(ftp.sda())
+                print(ftp.pwd())
             except:
                 print("HATA!:Dizin Yolu Bulunamadı.")
             continue
 
         elif command == "listele":
-            continue# şu an çalışmamaktadır
+            continue # şu an çalışmamaktadır
             try:
-                resp=ftp.listele()
+                resp=ftp.dir()
                 print("Başarı ile Listelendi.")
             except:
                 print("HATA!: Listelenemedi.")
             continue
 
-        elif command.__contains__("k_ekle"):
+        elif command.__contains__("k_olustur"):
 
-            mName=command.replace("k_ekle ","")
+            mName=command.replace("k_olustur ","")
 
             try:
-                resp=ftp.k_ekle(mName)
+                resp=ftp.mkd(mName)
                 print("Klasör Başarı ile Oluşturuldu.")
             except:
                 print("HATA!:Klasör Oluşturulamadı.")
@@ -44,62 +43,46 @@ class FTPLogin:
             continue
 
 
-
         elif command.__contains__("d_sil"):
             dosyaSil=command.replace("d_sil ","")
             try:
-                print(ftp.d_sil(dosyaSil))
+                print(ftp.delete(dosyaSil))
             except:
                 print("HATA!:Dosya Silinemedi.")
             continue
 
-          elif command.__contains__("k_sil"):
-            dosyaSil=command.replace("k_sil ","")
-            try:
-                print(ftp.k_sil(klasorSil))
-            except:
-                print("HATA!:Klasör Silinemedi.")
-            continue
 
 
         elif command.__contains__("d_boyut"):
             dosya=command.replace("d_boyut ","")
             try:
-                print("Dosya boyutu : ",ftp.d_boyut(dosya))
+                print("Dosya boyutu : ",ftp.delete(dosya))
             except:
                 print("HATA!:Dosya boyutu belirsiz.")
             continue
-
-
-         elif command.__contains__("k_boyut"):
-            dosya=command.replace("k_boyut ","")
-            try:
-                print("Klasör boyutu : ",ftp.k_boyut(klasor))
-            except:
-                print("HATA!:Dosya boyutu belirsiz.")
-            continue
-
 
         elif command.__contains__("d_degistir"):
             dosya = command.replace("d_degistir ", "")
             try:
-                print("Dosya dizin degisti : ", ftp.d_degistir(dosya))
-                print("Suan ki yeriniz : ", ftp.sda())
+                print("Dosya dizin degisti : ", ftp.rename(dosya))
+                print("Suan ki yeriniz : ", ftp.pwd())
             except:
                 print("HATA!:Dosya adı belirsiz.")
             continue
 
-        elif command.__contains__("d_al"):  # Dosya gönderme
+        elif command.__contains__("d_al"):
             try:
-                resp = ftp_fn.download("deneme.txt", "Desktop", ftp)
+                command = command.replace("d_al ", "")
+                command = command.split(" ")
+                resp = ftp_fn.download(command[0], command[1], ftp)
                 print("Dosya Başarı ile Alındı.")
             except:
                 print("HATA!:Dosya Gönderilemedi.")
             continue
 
-        elif command == "d_yukle":  # Dosya gönderme
+        elif command == "d_yukle":
             try:
-                resp=ftp.d_yukle()
+                resp=ftp_fn.upload()
                 print("Dosya Başarı ile Yüklendi.")
             except:
                 print("HATA!:Dosya Yüklenemedi.")
@@ -107,7 +90,7 @@ class FTPLogin:
 
         elif command == "kapat":  # Ftpden çıkma login ekranına geri götürme
             try:
-                resp=ftp.kapat()
+                resp=ftp.close()
                 print("Bağlantı Kapatıldı.")
                 ftp_fn.myLogin(ftp_fn)
             except:
@@ -115,4 +98,4 @@ class FTPLogin:
             continue
 
         elif command == "cikis":  # Programdan çıkma
-            sys.cikis()
+            sys.exit()

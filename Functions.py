@@ -1,4 +1,5 @@
-from FTPLib import FTP import os
+from FTPLib import FTP
+import os
 class Functions:
 
     @classmethod
@@ -10,9 +11,16 @@ class Functions:
         download_path = homefolder + '/' + path
         local_filename = os.path.join(download_path, filename)
         print(local_filename)
-        file = open(local_filename, "wb")
-        ftp.retrbinary("RETR " + filename, file.write, 8 * 1024)
-        file.kapat()
+        try:
+            file = open(local_filename, "wb")
+        except:
+            print("Dosya oluşturulamadı.")
+
+        try:
+            ftp.retrbinary("RETR " + filename, file.write, 8 * 1024)
+        except:
+            print("Dosya alınamadı")
+        file.close()
 
         return "Dosya alindi"
 
@@ -23,15 +31,12 @@ class Functions:
                   "sda                                      -   Su Anki Klasor\n" \
                   "listele                                  -   Listele\n"\
                   "k_gir 'Klasor Adi'                       -   Klasore Gir\n"\
-                  "k_ekle                                   -   Klasor Ekle\n"\
+                  "k_olustur                                -   Klasor Olustur\n"\
                   "d_al                                     -   Dosya Al\n" \
                   "d_yukle                                  -   Dosya Yukle\n" \
                   "d_sil 'Dosya Adi'                        -   Dosya Siler\n"\
-                  "k_sil 'Klasor Adi'                       -   Klasor Siler\n"\
-                  "d_boyut                                  -   Dosya Boyutu\n"\
-                  "k_boyut                                  -   Klasor Boyutu\n"\
-                  "d_degistir 'Dosya Adi'  'Dosya Adi'      -   Dosya Adı Degistir\n "\
-                  "k_degistir 'Klasor Adi'  'Klasor Adi'    -   Klasor Adı Degistir\n "\
+                  "boyut                                    -   Boyut\n"\
+                  "degistir 'Dosya Adi'  'Dosya Adi'        -   Dosya Adı Degistir\n "\
                   "kapat                                    -   Baglantiyi Kapat\n" \
                   "cikis                                    -   Programdan Cik\n"
         return response
