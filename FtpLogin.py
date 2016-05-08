@@ -14,94 +14,105 @@ class FTPLogin:
             continue
 
 
-        elif command == "pwd":  # Bulunan dizin ismini verir
+        elif command == "sda":  # Bulunan dizin ismini verir
 
             try:
-                print(ftp.pwd())
+                print(ftp.sda())
             except:
                 print("HATA!:Dizin Yolu Bulunamadı.")
             continue
 
-        elif command == "dir":
+        elif command == "listele":
             continue# şu an çalışmamaktadır
             try:
-                resp=ftp.dir()
-                print("Klasörler Başarı ile Listelendi.")
+                resp=ftp.listele()
+                print("Başarı ile Listelendi.")
             except:
-                print("HATA!:Klasörler Listelenemedi.")
+                print("HATA!: Listelenemedi.")
             continue
 
-        elif command.__contains__("mkd"):
+        elif command.__contains__("k_ekle"):
 
-            mName=command.replace("mkd ","")
+            mName=command.replace("k_ekle ","")
 
             try:
-                resp=ftp.mkd(mName)
+                resp=ftp.k_ekle(mName)
                 print("Klasör Başarı ile Oluşturuldu.")
             except:
                 print("HATA!:Klasör Oluşturulamadı.")
 
             continue
 
-        elif command.__contains__("delete"):
-            dosyaSil=command.replace("delete ","")
+
+
+        elif command.__contains__("d_sil"):
+            dosyaSil=command.replace("d_sil ","")
             try:
-                print(ftp.delete(dosyaSil))
+                print(ftp.d_sil(dosyaSil))
             except:
                 print("HATA!:Dosya Silinemedi.")
             continue
 
-        elif command.__contains__("rmd"):
-            dosyaSil=command.replace("rmd ","")
+          elif command.__contains__("k_sil"):
+            dosyaSil=command.replace("k_sil ","")
             try:
-                print(ftp.rmd(dosyaSil))
+                print(ftp.k_sil(klasorSil))
             except:
                 print("HATA!:Klasör Silinemedi.")
             continue
 
-        elif command.__contains__("size"):
-            dosya=command.replace("size ","")
+
+        elif command.__contains__("d_boyut"):
+            dosya=command.replace("d_boyut ","")
             try:
-                print("Dosya boyutu : ",ftp.size(dosya))
+                print("Dosya boyutu : ",ftp.d_boyut(dosya))
             except:
                 print("HATA!:Dosya boyutu belirsiz.")
             continue
 
-        elif command.__contains__("cwd"):
-            dosya = command.replace("cwd ", "")
+
+         elif command.__contains__("k_boyut"):
+            dosya=command.replace("k_boyut ","")
             try:
-                print("Dosya dizin degisti : ", ftp.cwd(dosya))
-                print("Suan ki yeriniz : ", ftp.pwd())
+                print("Klasör boyutu : ",ftp.k_boyut(klasor))
+            except:
+                print("HATA!:Dosya boyutu belirsiz.")
+            continue
+
+
+        elif command.__contains__("d_degistir"):
+            dosya = command.replace("d_degistir ", "")
+            try:
+                print("Dosya dizin degisti : ", ftp.d_degistir(dosya))
+                print("Suan ki yeriniz : ", ftp.sda())
             except:
                 print("HATA!:Dosya adı belirsiz.")
             continue
 
-        elif command.__contains__("get"):  # Dosya alma komututur.... alınacakdosya alınansodya adı
-            continue #suan calismamaktadir
-            command=command.replace("get ","")
+        elif command.__contains__("d_al"):  # Dosya gönderme
             try:
-                resp=ftp.get(command)
+                resp = ftp_fn.download("deneme.txt", "Desktop", ftp)
                 print("Dosya Başarı ile Alındı.")
-            except:
-                print("HATA!:Dosya Alınamadı.")
-            continue
-
-        elif command == "send":  # Dosya gönderme
-            try:
-                resp=ftp.send()
-                print("Dosya Başarı ile Gönderildi.")
             except:
                 print("HATA!:Dosya Gönderilemedi.")
             continue
 
-        elif command == "close":  # Ftpden çıkma login ekranına geri götürme
+        elif command == "d_yukle":  # Dosya gönderme
             try:
-                resp=ftp.close()
-                print("Bağlantıdan Başarı İle Çıkıldı.")
+                resp=ftp.d_yukle()
+                print("Dosya Başarı ile Yüklendi.")
+            except:
+                print("HATA!:Dosya Yüklenemedi.")
+            continue
+
+        elif command == "kapat":  # Ftpden çıkma login ekranına geri götürme
+            try:
+                resp=ftp.kapat()
+                print("Bağlantı Kapatıldı.")
                 ftp_fn.myLogin(ftp_fn)
             except:
                 print("HATA!:Bağlantıdan Çıkış Yapılamadı.")
             continue
 
-        elif command == "exit":  # Programdan çıkma
-            sys.exit()
+        elif command == "cikis":  # Programdan çıkma
+            sys.cikis()
