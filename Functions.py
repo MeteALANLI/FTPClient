@@ -1,25 +1,39 @@
-from FTPLib import FTP
+from FTPLib import FTP import os
 class Functions:
 
     @classmethod
     def upload(self):
         return
     @classmethod
-    def download(self):
-        return
+    def download(cls, filename, path, ftp):
+        homefolder = os.environ['userprofile']
+        download_path = homefolder + '/' + path
+        local_filename = os.path.join(download_path, filename)
+        print(local_filename)
+        file = open(local_filename, "wb")
+        ftp.retrbinary("RETR " + filename, file.write, 8 * 1024)
+        file.kapat()
+
+        return "Dosya alindi"
+
+
     @classmethod
     def getHelp(cls):
         response = "K   O   M   U   T   L   A   R\n"\
-                  "pwd      -   Dizin Adları\n" \
-                  "dir      -   Dizinleri Listele\n" \
-                  "mkd      -   Dosya ekle\n" \
-                  "get      -   Dosya Al\n" \
-                  "send     -   Dosya Gönder\n" \
-                  "close    -   Bağlantıyı kapat\n" \
-                  "exit     -   Programdan çık\n"\
-                  "size     -   Dosya Boyutu\n"\
-                  "rmd 'Dosya Adı'     -   Dizini Siler\n"\
-                  "cwd 'Dosya Adı'     -   dizinler arası geçiş\n"
+                  "sda                                      -   Su Anki Klasor\n" \
+                  "listele                                  -   Listele\n"\
+                  "k_gir 'Klasor Adi'                       -   Klasore Gir\n"\
+                  "k_ekle                                   -   Klasor Ekle\n"\
+                  "d_al                                     -   Dosya Al\n" \
+                  "d_yukle                                  -   Dosya Yukle\n" \
+                  "d_sil 'Dosya Adi'                        -   Dosya Siler\n"\
+                  "k_sil 'Klasor Adi'                       -   Klasor Siler\n"\
+                  "d_boyut                                  -   Dosya Boyutu\n"\
+                  "k_boyut                                  -   Klasor Boyutu\n"\
+                  "d_degistir 'Dosya Adi'  'Dosya Adi'      -   Dosya Adı Degistir\n "\
+                  "k_degistir 'Klasor Adi'  'Klasor Adi'    -   Klasor Adı Degistir\n "\
+                  "kapat                                    -   Baglantiyi Kapat\n" \
+                  "cikis                                    -   Programdan Cik\n"
         return response
 
     def myLogin(self):  # Giriş yaptıran method yanls giris olursa bir daha girmek icin
